@@ -27,4 +27,13 @@
     <color name="grey_777777">#777777</color>
     <color name="grey_d4d3d3">#d4d3d3</color>
     <color name="grey_edf0ef">#edf0ef</color>
+
+
+    <color name="class_color1">#00b3ed</color>
+    <color name="class_color2">#12ca98</color>
+    <color name="class_color3">#91c606</color>
+    <color name="class_color4">#6d9ff4</color>
+    <color name="class_color5">#fe8d3f</color>
+    <color name="class_color6">#d33a32</color>
+    <color name="class_color7">#00b3ed</color>
 </resources>

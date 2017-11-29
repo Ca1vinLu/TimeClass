@@ -10,12 +10,13 @@ import com.blankj.utilcode.util.LogUtils;
 import com.lzy.okgo.OkGo;
 
 import butterknife.ButterKnife;
+import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
 /**
  * Created by LYZ on 2017/7/23.
  */
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends SwipeBackActivity {
 
     protected String TAG = this.getClass().getSimpleName();
 

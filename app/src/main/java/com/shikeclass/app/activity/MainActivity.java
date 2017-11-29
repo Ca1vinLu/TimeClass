@@ -39,11 +39,14 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void initView() {
+        setSwipeBackEnable(false);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         adapter = new ClassAdapter();
         adapter.bindToRecyclerView(recyclerView);
+
+
     }
 
     @Override
