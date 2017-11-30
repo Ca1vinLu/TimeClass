@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.shikeclass.app">
+    package="com.shikeclass.app.student">
 
     <application
-        android:name=".student.MyApplication"
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".student.activity.MainActivity"
+            android:name=".activity.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,11 +20,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".student.activity.MyClassActivity" />
-        <activity android:name=".student.activity.FileDetailActivity" />
-        <activity android:name=".student.activity.FileActivity" />
-        <activity android:name=".student.activity.LoginActivity" />
-        <activity android:name=".student.activity.SignInListActivity"/>
+        <activity android:name=".activity.MyClassActivity" />
+        <activity android:name=".activity.FileDetailActivity" />
+        <activity android:name=".activity.FileActivity" />
+        <activity android:name=".activity.LoginActivity" />
+        <activity android:name=".activity.SignInListActivity"/>
     </application>
 
 </manifest>

@@ -7,7 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.widget.TextView;
 
-import com.shikeclass.app.R;
+import com.shikeclass.app.student.R;
 
 
 /**

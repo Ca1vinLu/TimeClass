@@ -1,6 +1,6 @@
 package com.shikeclass.app.student.activity;
 
-import com.shikeclass.app.R;
+import com.shikeclass.app.student.R;
 import com.shikeclass.app.student.base.BaseActivity;
 
 public class SignInListActivity extends BaseActivity {

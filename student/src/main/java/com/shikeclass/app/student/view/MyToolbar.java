@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.shikeclass.app.R;
+import com.shikeclass.app.student.R;
 
 
 /**

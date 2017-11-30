@@ -8,7 +8,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.ConvertUtils;
-import com.shikeclass.app.R;
+import com.shikeclass.app.student.R;
 import com.shikeclass.app.student.base.BaseActivity;
 import com.shikeclass.app.student.bean.ClassBean;
 

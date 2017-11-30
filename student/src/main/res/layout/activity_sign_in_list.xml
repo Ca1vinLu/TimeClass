@@ -4,6 +4,6 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent"
-    tools:context=".student.activity.SignInListActivity">
+    tools:context=".activity.SignInListActivity">
 
 </LinearLayout>

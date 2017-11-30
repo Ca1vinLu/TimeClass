@@ -7,7 +7,6 @@ import com.blankj.utilcode.util.Utils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cookie.CookieJarImpl;
 import com.lzy.okgo.cookie.store.SPCookieStore;
-import com.shikeclass.app.BuildConfig;
 
 import okhttp3.OkHttpClient;
 

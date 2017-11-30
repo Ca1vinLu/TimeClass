@@ -5,7 +5,7 @@ import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.shikeclass.app.R;
+import com.shikeclass.app.student.R;
 import com.shikeclass.app.student.activity.MyClassActivity;
 
 /**
