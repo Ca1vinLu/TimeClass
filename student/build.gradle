@@ -51,7 +51,7 @@ dependencies {
     //View相关
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.34'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
-    implementation 'cn.zhouchaoyuan:excelpanel:1.0.3'
+//    implementation 'cn.zhouchaoyuan:excelpanel:1.0.3'
     implementation 'me.imid.swipebacklayout.lib:library:1.1.0'
 
     //NetWork相关

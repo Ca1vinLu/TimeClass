@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.shikeclass.app.R;
 import com.shikeclass.app.student.adapter.ClassAdapter;
@@ -67,6 +68,12 @@ public class MainActivity extends BaseActivity
         toggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getHeaderView(0).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(LoginActivity.class);
+            }
+        });
     }
 
     @Override
@@ -108,17 +115,17 @@ public class MainActivity extends BaseActivity
         int id = item.getItemId();
 
         if (id == R.id.my_class) {
-            // Handle the camera action
+            startActivity(MyClassActivity.class);
         } else if (id == R.id.my_file) {
-
+            startActivity(FileActivity.class);
         } else if (id == R.id.my_sign_in) {
 
         } else if (id == R.id.my_rank) {
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 }
