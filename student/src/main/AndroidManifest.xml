@@ -24,7 +24,7 @@
         <activity android:name=".student.activity.FileDetailActivity" />
         <activity android:name=".student.activity.FileActivity" />
         <activity android:name=".student.activity.LoginActivity" />
-        <activity android:name=".student.activity.SignInListActivity"></activity>
+        <activity android:name=".student.activity.SignInListActivity"/>
     </application>
 
 </manifest>
