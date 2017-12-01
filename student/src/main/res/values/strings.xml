@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">时课</string>
+    <string name="app_name">时课学生端</string>
 
     <string name="LinearLayoutManager">LinearLayoutManager</string>
     <string name="GridLayoutManager">GridLayoutManager</string>
@@ -25,4 +25,5 @@
     <string name="Friday">周五</string>
     <string name="Saturday">周六</string>
     <string name="sign_in">登录</string>
+    <string name="shike">时课</string>
 </resources>
