@@ -8,10 +8,25 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
-        
+//        classpath "io.realm:realm-gradle-plugin:4.3.0"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+    }
+
+    ext {
+        // Sdk and tools
+        compile_sdk_version = 26
+        build_tools_version = '27.0.2'
+        min_sdk_version = 14
+        target_sdk_version = 26
+        version_code = 1
+        version_name = "0.0.1-alpha"
+        // App dependencies
+        support_version = '27.0.2'
+//    leakcanary_version = '1.5.4'
+//    junit_version = '4.12'
+//    robolectric_version = '3.1.2'
     }
 }
 
@@ -26,3 +41,5 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+

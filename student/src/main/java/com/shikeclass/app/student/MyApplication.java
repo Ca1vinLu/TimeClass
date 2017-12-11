@@ -27,7 +27,7 @@ public class MyApplication extends Application {
         application = this;
         Utils.init(this);
         LogUtils.getConfig().setLogSwitch(BuildConfig.DEBUG);
-
+//        Realm.init(this);
         initOkGo();
     }
 
