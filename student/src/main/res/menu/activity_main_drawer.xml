@@ -20,6 +20,10 @@
             android:id="@+id/my_rank"
             android:icon="@drawable/icon_rank"
             android:title="@string/my_rank" />
+
+        <item
+            android:icon="@drawable/icon_nav"
+            android:title="关于" />
     </group>
 
 

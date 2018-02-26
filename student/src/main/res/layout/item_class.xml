@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginBottom="12dp"
     android:orientation="vertical">
 
@@ -25,9 +26,10 @@
             android:paddingTop="8dp">
 
             <TextView
+                android:id="@+id/class_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="高等数学A（一）"
+                tools:text="高等数学A（一）"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -43,10 +45,11 @@
                     android:src="@drawable/icon_clock" />
 
                 <TextView
+                    android:id="@+id/class_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="3dp"
-                    android:text="周一 上午8:00-9:50"
+                    tools:text="周一 上午8:00-9:50"
                     android:textColor="@color/grey_7a7a7a"
                     android:textSize="14sp" />
 
@@ -63,10 +66,11 @@
                     android:src="@drawable/icon_location" />
 
                 <TextView
+                    android:id="@+id/class_place"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="3dp"
-                    android:text="E4-102"
+                    tools:text="E4-102"
                     android:textColor="@color/grey_7a7a7a"
                     android:textSize="14sp" />
 

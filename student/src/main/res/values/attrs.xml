@@ -4,4 +4,8 @@
         <attr name="title" format="string" />
         <attr name="showBackBtn" format="boolean" />
     </declare-styleable>
+
+    <declare-styleable name="WeekTextView">
+        <attr name="weekName" format="string" />
+    </declare-styleable>
 </resources>

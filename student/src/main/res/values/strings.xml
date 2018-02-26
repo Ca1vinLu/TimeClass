@@ -26,4 +26,5 @@
     <string name="Saturday">周六</string>
     <string name="sign_in">登录</string>
     <string name="shike">时课</string>
+    <string name="studentId">学号</string>
 </resources>

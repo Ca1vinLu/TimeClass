@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".activity.FileActivity">
 
-    <com.shikeclass.app.student.view.MyToolbar
+    <com.shikeclass.student.view.MyToolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:title="我的文件" />

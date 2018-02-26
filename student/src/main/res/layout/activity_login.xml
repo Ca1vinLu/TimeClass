@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".activity.LoginActivity">
 
-    <com.shikeclass.app.student.view.MyToolbar
+    <com.shikeclass.student.view.MyToolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:showBackBtn="true"
@@ -74,6 +74,7 @@
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="28dp"
                 android:background="@drawable/button_red"
+                android:foreground="?selectableItemBackground"
                 android:gravity="center"
                 android:paddingBottom="12dp"
                 android:paddingTop="12dp"
