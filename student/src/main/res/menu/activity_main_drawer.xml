@@ -23,7 +23,7 @@
 
         <item
             android:icon="@drawable/icon_nav"
-            android:title="关于" />
+            android:title="@string/about" />
     </group>
 
 

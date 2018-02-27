@@ -1,5 +1,10 @@
 package com.shikeclass.student.activity;
 
+import android.content.Intent;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
+import android.graphics.drawable.Icon;
+import android.os.Build;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -20,6 +25,7 @@ import com.shikeclass.student.bean.ClassBean;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -95,7 +101,7 @@ public class MainActivity extends BaseActivity
                 todayClass.add(datum);
         }
         adapter.setNewData(todayClass);
-        
+
         swipeRefreshLayout.setRefreshing(false);
     }
 
@@ -190,5 +196,24 @@ public class MainActivity extends BaseActivity
 
     private int convertWeekDay(int weekDay) {
         return (weekDay + 1) % 7;
+    }
+
+
+    private void initShortcuts() {
+        ShortcutManager shortcutManager = null;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+            shortcutManager = getSystemService(ShortcutManager.class);
+
+
+            ShortcutInfo shortcut = new ShortcutInfo.Builder(this, "id1")
+                    .setShortLabel("Web site")
+                    .setLongLabel("Open the web site")
+                    .setIcon(Icon.createWithResource(mActivity, R.drawable.icon_class))
+                    .setIntent(new Intent(mActivity, ClassTableActivity.class))
+                    .build();
+
+            shortcutManager.setDynamicShortcuts(Arrays.asList(shortcut));
+        }
     }
 }

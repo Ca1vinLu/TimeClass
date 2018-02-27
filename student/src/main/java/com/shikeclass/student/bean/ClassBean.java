@@ -1,10 +1,12 @@
 package com.shikeclass.student.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by LYZ on 2017/11/29 0029.
  */
 
-public class ClassBean {
+public class ClassBean implements Serializable {
     public ClassBean(String name, String address, int weekDay, int startClass, int endClass) {
         this.name = name;
         this.address = address;

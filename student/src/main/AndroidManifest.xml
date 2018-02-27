@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.shikeclass.student">
 
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -17,13 +19,22 @@
             android:theme="@style/TranslucentAppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+
+                <action android:name="android.intent.action.VIEW" />
             </intent-filter>
+
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
-        <activity android:name=".activity.ClassTableActivity" />
+        <activity
+            android:name=".activity.ClassTableActivity"
+            android:exported="true" />
         <activity android:name=".activity.FileDetailActivity" />
-        <activity android:name=".activity.FileActivity" />
+        <activity
+            android:name=".activity.FileActivity"
+            android:exported="true" />
         <activity android:name=".activity.LoginActivity" />
         <activity android:name=".activity.SignInListActivity" />
     </application>

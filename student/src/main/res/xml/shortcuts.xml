@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@mipmap/ic_class"
+        android:shortcutDisabledMessage="@string/my_class"
+        android:shortcutId="my_class"
+        android:shortcutLongLabel="@string/my_class"
+        android:shortcutShortLabel="@string/my_class"
+        tools:targetApi="n_mr1">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="com.shikeclass.student.activity.ClassTableActivity"
+            android:targetPackage="com.shikeclass.student" />
+        <categories android:name="android.shortcut.conversation" />
+
+    </shortcut>
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@mipmap/ic_file"
+        android:shortcutDisabledMessage="@string/my_file"
+        android:shortcutId="my_file"
+        android:shortcutLongLabel="@string/my_file"
+        android:shortcutShortLabel="@string/my_file"
+        tools:targetApi="n_mr1">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="com.shikeclass.student.activity.FileActivity"
+            android:targetPackage="com.shikeclass.student" />
+        <categories android:name="android.shortcut.conversation" />
+
+    </shortcut>
+
+
+</shortcuts>
