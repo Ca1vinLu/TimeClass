@@ -1,5 +1,8 @@
 package com.shikeclass.student.activity;
 
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -14,7 +17,16 @@ import com.blankj.utilcode.util.TimeUtils;
 import com.shikeclass.student.R;
 import com.shikeclass.student.base.BaseActivity;
 import com.shikeclass.student.bean.ClassBean;
+import com.shikeclass.student.eventbus.UpdateTableEvent;
+import com.shikeclass.student.utils.CommonValue;
+import com.shikeclass.student.utils.DataUtils;
+import com.shikeclass.student.utils.DialogUtils;
+import com.shikeclass.student.utils.SharedPreUtil;
 import com.shikeclass.student.view.WeekTextView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -63,7 +75,8 @@ public class ClassTableActivity extends BaseActivity {
     private int dp2 = ConvertUtils.dp2px(2);
     private int currentWeek = 1;
     private int currentWeekDay = 1;
-    private final String startDay = "2018-03-05";
+    private String startDay;
+    private boolean isDuringTerm = true;
 
     private List<Integer> colorList = new ArrayList<>();
 
@@ -75,6 +88,7 @@ public class ClassTableActivity extends BaseActivity {
     @Override
     public void initView() {
         setWeek();
+        setDate();
         classContent.post(new Runnable() {
             @Override
             public void run() {
@@ -94,8 +108,36 @@ public class ClassTableActivity extends BaseActivity {
     }
 
     private void setWeek() {
+        startDay = SharedPreUtil.getStringValue(mActivity, CommonValue.SHA_TERM_START_TIME, "2018-03-05");
+
         Date startDay = TimeUtils.string2Date(this.startDay, new SimpleDateFormat("yyyy-MM-dd"));
-        long spanDays = TimeUtils.getTimeSpan(startDay, new Date(System.currentTimeMillis()), TimeConstants.DAY);
+        int termWeeks = SharedPreUtil.getIntValue(mActivity, CommonValue.SHA_TERM_WEEKS, 20);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startDay);
+        calendar.add(Calendar.WEEK_OF_YEAR, termWeeks);
+        calendar.add(Calendar.DATE, -1);
+        Date endDay = calendar.getTime();
+        Date today = new Date(System.currentTimeMillis());
+        if (today.before(startDay) || today.after(endDay)) {
+            isDuringTerm = false;
+            weekName.setText("放假中");
+            DialogUtils.showDialog(mActivity, "提示", "放假中，请及时校准下学期开学时间", "校准", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startActivity(AdjustTermActivity.class);
+                }
+            });
+        } else {
+            isDuringTerm = true;
+            long spanDays = TimeUtils.getTimeSpan(startDay, new Date(System.currentTimeMillis()), TimeConstants.DAY);
+            currentWeek = (int) (spanDays / 7 + 1);
+            weekName.setText("第" + currentWeek + "周");
+        }
+
+
+    }
+
+    private void setDate() {
         Calendar calendar = Calendar.getInstance();
         currentWeekDay = calendar.get(Calendar.DAY_OF_WEEK);
         calendar.add(Calendar.DATE, -(currentWeekDay - 1));
@@ -145,10 +187,6 @@ public class ClassTableActivity extends BaseActivity {
                 break;
 
         }
-
-        currentWeek = (int) (spanDays / 7 + 1);
-        weekName.setText("第" + currentWeek + "周");
-
     }
 
     private void getData() {
@@ -160,24 +198,17 @@ public class ClassTableActivity extends BaseActivity {
         colorList.add(ContextCompat.getColor(mActivity, R.color.class_color6));
         colorList.add(ContextCompat.getColor(mActivity, R.color.class_color7));
 
-        List<ClassBean> data = new ArrayList<>();
-        ClassBean classBean = new ClassBean("面向对象技术引论", "C2-202", 1, 3, 4);
-        data.add(classBean);
-        classBean = new ClassBean("编译原理", "D1-201", 1, 7, 9);
-        data.add(classBean);
-        classBean = new ClassBean("编译原理实验", "待定", 1, 10, 17, 11, 13);
-        data.add(classBean);
-        classBean = new ClassBean("大学生就业指导与创业教育", "F2-203", 3, 2, 11, 3, 4);
-        data.add(classBean);
-        classBean = new ClassBean("计算机网络", "D1-204", 3, 7, 9);
-        data.add(classBean);
-        classBean = new ClassBean("计算机网络实验", "待定", 3, 6, 17, 11, 13);
-        data.add(classBean);
-        classBean = new ClassBean("软件工程创新实践", "待定", 4, 11, 15, 7, 10);
-        data.add(classBean);
-        classBean = new ClassBean("面向对象技术引论实践", "D1-401", 5, 5, 18, 7, 9, 1);
-        data.add(classBean);
+        List<ClassBean> data = DataUtils.getClassTableData(mActivity);
 
+        if (data == null) {
+            DialogUtils.showDialog(mActivity, "提示", "请先导入课程，导入前请确保手机已连接至HQU", "导入", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startActivity(ImportClassActivity.class);
+                }
+            });
+            return;
+        }
 
         int size = data.size();
         int colorSize = colorList.size();
@@ -194,6 +225,26 @@ public class ClassTableActivity extends BaseActivity {
     public void initListener() {
 
     }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.POSTING)
+    public void onEventMainThread(UpdateTableEvent event) {
+        setWeek();
+        getData();
+    }
+
 
     private void addClassTextView(ClassBean bean) {
         addClassTextView(bean.name, bean.address, bean.weekDay, bean.startClass, bean.endClass, bean.colorId);
@@ -239,7 +290,7 @@ public class ClassTableActivity extends BaseActivity {
     }
 
     private boolean shouldHaveClass(ClassBean bean) {
-        if (bean.startWeek <= currentWeek && currentWeek <= bean.endWeek) {
+        if (isDuringTerm && bean.startWeek <= currentWeek && currentWeek <= bean.endWeek) {
             if (bean.isSingleOrDouble == 0)
                 return true;
             if (bean.isSingleOrDouble == 1 && currentWeek % 2 == 0)

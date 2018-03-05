@@ -7,6 +7,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.shikeclass.student.R;
 import com.shikeclass.student.activity.ClassTableActivity;
+import com.shikeclass.student.activity.FileActivity;
 import com.shikeclass.student.bean.ClassBean;
 
 /**
@@ -27,6 +28,18 @@ public class ClassAdapter extends BaseQuickAdapter<ClassBean, BaseViewHolder> {
                 mContext.startActivity(intent);
             }
         });
+        setOnItemChildClickListener(new OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                Intent intent;
+                switch (view.getId()) {
+                    case R.id.btn_file:
+                        intent = new Intent(mContext, FileActivity.class);
+                        mContext.startActivity(intent);
+                        break;
+                }
+            }
+        });
     }
 
     @Override
@@ -35,5 +48,7 @@ public class ClassAdapter extends BaseQuickAdapter<ClassBean, BaseViewHolder> {
         String time = weeks[item.weekDay] + " " + startTime[item.startClass - 1] + "-" + endTime[item.endClass - 1];
         helper.setText(R.id.class_time, time);
         helper.setText(R.id.class_place, item.address);
+        helper.setText(R.id.class_file, item.name + " 课件");
+        helper.addOnClickListener(R.id.btn_file);
     }
 }

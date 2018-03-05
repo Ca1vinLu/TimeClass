@@ -14,7 +14,7 @@
         android:layout_height="wrap_content">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imageView"
+            android:id="@+id/head_image"
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:src="@color/white" />
@@ -28,21 +28,37 @@
 
 
     <TextView
+        android:id="@+id/student_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="@string/nickname"
+        android:text="@string/name"
         android:textColor="@color/white"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:visibility="gone" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/student_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="@string/studentId"
         android:textColor="@color/white"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:minLines="2"
+        android:text="立即登录"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:visibility="visible" />
+
 
 </LinearLayout>

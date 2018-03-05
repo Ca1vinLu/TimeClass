@@ -1,20 +1,26 @@
 package com.shikeclass.student.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Icon;
 import android.os.Build;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.blankj.utilcode.constant.TimeConstants;
 import com.blankj.utilcode.util.TimeUtils;
@@ -22,6 +28,15 @@ import com.shikeclass.student.R;
 import com.shikeclass.student.adapter.ClassAdapter;
 import com.shikeclass.student.base.BaseActivity;
 import com.shikeclass.student.bean.ClassBean;
+import com.shikeclass.student.eventbus.UpdateTableEvent;
+import com.shikeclass.student.utils.CommonValue;
+import com.shikeclass.student.utils.DataUtils;
+import com.shikeclass.student.utils.DialogUtils;
+import com.shikeclass.student.utils.SharedPreUtil;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,6 +46,7 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -46,10 +62,17 @@ public class MainActivity extends BaseActivity
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
 
+    CircleImageView headImage;
+    TextView studentName;
+    TextView studentId;
+    TextView login;
+
     private ClassAdapter adapter;
     private int currentWeek = 1;
     private int currentWeekDay = 1;
-    private final String startDay = "2018-03-05";
+    private String startDay;
+    private boolean isDuringTerm = true;
+    private long clickBackTime;
 
     @Override
     public int getLayoutId() {
@@ -62,39 +85,72 @@ public class MainActivity extends BaseActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        View headerView = navigationView.getHeaderView(0);
+        headImage = headerView.findViewById(R.id.head_image);
+        studentName = headerView.findViewById(R.id.student_name);
+        studentId = headerView.findViewById(R.id.student_id);
+        login = headerView.findViewById(R.id.login);
+
         adapter = new ClassAdapter();
         adapter.bindToRecyclerView(recyclerView);
-        adapter.setEmptyView(R.layout.item_no_class);
 
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        swipeRefreshLayout.setColorSchemeResources(R.color.class_color1, R.color.class_color2, R.color.class_color3, R.color.class_color4);
     }
 
     @Override
     public void initData() {
+        String stuName, stuId;
+        stuName = SharedPreUtil.getStringValue(mActivity, CommonValue.SHA_STU_NAME, "");
+        stuId = SharedPreUtil.getStringValue(mActivity, CommonValue.SHA_STU_ID, "");
+        if (!TextUtils.isEmpty(stuName) && !TextUtils.isEmpty(stuId)) {
+            studentId.setText(stuId);
+            studentName.setText(stuName);
+            login.setVisibility(View.GONE);
+            studentName.setVisibility(View.VISIBLE);
+            studentId.setVisibility(View.VISIBLE);
+        }
+
+
         swipeRefreshLayout.setRefreshing(true);
-        List<ClassBean> data = new ArrayList<>();
-        ClassBean classBean = new ClassBean("面向对象技术引论", "C2-202", 1, 3, 4);
-        data.add(classBean);
-        classBean = new ClassBean("编译原理", "D1-201", 1, 7, 9);
-        data.add(classBean);
-        classBean = new ClassBean("编译原理实验", "待定", 1, 10, 17, 11, 13);
-        data.add(classBean);
-        classBean = new ClassBean("大学生就业指导与创业教育", "F2-203", 3, 2, 11, 3, 4);
-        data.add(classBean);
-        classBean = new ClassBean("计算机网络", "D1-204", 3, 7, 9);
-        data.add(classBean);
-        classBean = new ClassBean("计算机网络实验", "待定", 3, 6, 17, 11, 13);
-        data.add(classBean);
-        classBean = new ClassBean("软件工程创新实践", "待定", 4, 11, 15, 7, 10);
-        data.add(classBean);
-        classBean = new ClassBean("面向对象技术引论实践", "D1-401", 5, 5, 18, 7, 9, 1);
-        data.add(classBean);
+        List<ClassBean> data = DataUtils.getClassTableData(mActivity);
 
+        if (data == null) {
+            DialogUtils.showDialog(mActivity, "提示", "请先导入课程，导入前请确保手机已连接至HQU", "导入", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startActivity(ImportClassActivity.class);
+                }
+            });
+            swipeRefreshLayout.setRefreshing(false);
+            adapter.setEmptyView(R.layout.item_no_import_class);
+            return;
+        }
+
+        startDay = SharedPreUtil.getStringValue(mActivity, CommonValue.SHA_TERM_START_TIME, "2018-03-05");
         Date startDay = TimeUtils.string2Date(this.startDay, new SimpleDateFormat("yyyy-MM-dd"));
-        long spanDays = TimeUtils.getTimeSpan(startDay, new Date(System.currentTimeMillis()), TimeConstants.DAY);
-        currentWeekDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-        currentWeek = (int) (spanDays / 7 + 1);
-
+        int termWeeks = SharedPreUtil.getIntValue(mActivity, CommonValue.SHA_TERM_WEEKS, 20);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startDay);
+        calendar.add(Calendar.WEEK_OF_YEAR, termWeeks);
+        calendar.add(Calendar.DATE, -1);
+        Date endDay = calendar.getTime();
+        Date today = new Date(System.currentTimeMillis());
+        if (today.before(startDay) || today.after(endDay)) {
+            adapter.setEmptyView(R.layout.item_on_holiday);
+            isDuringTerm = false;
+            DialogUtils.showDialog(mActivity, "提示", "放假中，请及时校准下学期开学时间", "校准", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startActivity(AdjustTermActivity.class);
+                }
+            });
+        } else {
+            isDuringTerm = true;
+            adapter.setEmptyView(R.layout.item_no_class);
+            long spanDays = TimeUtils.getTimeSpan(startDay, new Date(System.currentTimeMillis()), TimeConstants.DAY);
+            currentWeekDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+            currentWeek = (int) (spanDays / 7 + 1);
+        }
         List<ClassBean> todayClass = new ArrayList<>();
         for (ClassBean datum : data) {
             if (shouldHaveClass(datum))
@@ -129,12 +185,34 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.POSTING)
+    public void onEventMainThread(UpdateTableEvent event) {
+        initData();
+    }
+
+    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if (System.currentTimeMillis() - clickBackTime > 1500) {
+                Snackbar.make(recyclerView, "再按一次退出应用程序", Snackbar.LENGTH_SHORT).show();
+                clickBackTime = System.currentTimeMillis();
+            } else
+                super.onBackPressed();
         }
     }
 
@@ -154,6 +232,7 @@ public class MainActivity extends BaseActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(SettingActivity.class);
             return true;
         }
 
@@ -174,7 +253,10 @@ public class MainActivity extends BaseActivity
 
         } else if (id == R.id.my_rank) {
 
-        }
+        } else if (id == R.id.import_class) {
+            startActivity(ImportClassActivity.class);
+        } else if (id == R.id.setting)
+            startActivity(SettingActivity.class);
 
 //        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 //        drawer.closeDrawer(GravityCompat.START);
@@ -182,7 +264,7 @@ public class MainActivity extends BaseActivity
     }
 
     private boolean shouldHaveClass(ClassBean bean) {
-        if (bean.startWeek <= currentWeek && currentWeek <= bean.endWeek) {
+        if (isDuringTerm && bean.startWeek <= currentWeek && currentWeek <= bean.endWeek) {
             if (bean.isSingleOrDouble == 0 && currentWeekDay == convertWeekDay(bean.weekDay))
                 return true;
             if (bean.isSingleOrDouble == 1 && currentWeek % 2 == 0)

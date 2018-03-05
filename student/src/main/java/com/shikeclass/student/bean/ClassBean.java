@@ -40,7 +40,7 @@ public class ClassBean implements Serializable {
     }
 
     public String name;
-    public String address;
+    public String address = "待定";
     public int weekDay;
     public int startWeek = 1;
     public int endWeek = 18;

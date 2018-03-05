@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">时课学生端</string>
+    <string name="app_name">时课</string>
 
     <string name="LinearLayoutManager">LinearLayoutManager</string>
     <string name="GridLayoutManager">GridLayoutManager</string>
@@ -14,7 +14,7 @@
     <string name="my_file">我的文件</string>
     <string name="my_sign_in">我的签到</string>
     <string name="my_rank">签到排行榜</string>
-    <string name="start_sign_in">开始\n签到</string>
+    <string name="start_sign_in">立即\n签到</string>
     <string name="see_sign_in_list">查看签到表</string>
 
     <string name="Sunday">周日</string>
@@ -34,4 +34,12 @@
 
     <string name="shortcut_disabled_message1">shortcut_disabled_message1</string>
     <string name="shortcut_disabled_message2">shortcut_disabled_message2</string>
+    <string name="import_class">导入课程</string>
+    <string name="academic_year">学年</string>
+    <string name="term">学期</string>
+    <string name="faculty">学院</string>
+    <string name="grade">年级</string>
+    <string name="school_class">班级</string>
+    <string name="name">姓名</string>
+
 </resources>

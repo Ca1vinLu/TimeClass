@@ -20,10 +20,14 @@
             android:id="@+id/my_rank"
             android:icon="@drawable/icon_rank"
             android:title="@string/my_rank" />
-
         <item
-            android:icon="@drawable/icon_nav"
-            android:title="@string/about" />
+            android:id="@+id/import_class"
+            android:icon="@drawable/icon_import"
+            android:title="@string/import_class" />
+        <item
+            android:id="@+id/setting"
+            android:icon="@drawable/icon_setting"
+            android:title="@string/action_settings" />
     </group>
 
 

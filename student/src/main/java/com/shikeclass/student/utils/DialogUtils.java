@@ -46,22 +46,22 @@ public class DialogUtils {
 
     public static void showDialog(final Context context, String titleStr, String message, String posStr, DialogInterface.OnClickListener posListener, String negStr, DialogInterface.OnClickListener negListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        TextView title = new TextView(context);
-        title.setText(titleStr);
-        title.setTextColor(ContextCompat.getColor(context, R.color.black));
-        title.setPadding(0, context.getResources().getDimensionPixelSize(R.dimen.padding_16dp), 0, context.getResources().getDimensionPixelSize(R.dimen.padding_16dp));
-        title.setTextSize(18);
-        title.setGravity(Gravity.CENTER);
-        builder.setCustomTitle(title);
+        builder.setTitle(titleStr);
         builder.setMessage(message);
         builder.setPositiveButton(posStr, posListener);
         builder.setNegativeButton(negStr, negListener);
 
         AlertDialog dialog = builder.show();
-
-//        TextView mes = (TextView) dialog.findViewById(android.R.id.message);
-//        mes.setGravity(Gravity.START);
     }
 
+
+    public static void showDialog(final Context context, String titleStr, String message, String posStr, DialogInterface.OnClickListener posListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(titleStr);
+        builder.setMessage(message);
+        builder.setPositiveButton(posStr, posListener);
+        AlertDialog dialog = builder.show();
+
+    }
 
 }

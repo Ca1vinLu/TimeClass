@@ -21,7 +21,7 @@ buildscript {
         min_sdk_version = 19
         target_sdk_version = 27
         version_code = 1
-        version_name = "0.0.1"
+        version_name = "1.0.0"
         // App dependencies
         support_version = '27.0.2'
 //    leakcanary_version = '1.5.4'
