@@ -39,6 +39,21 @@ public class ClassBean implements Serializable {
     public ClassBean() {
     }
 
+    @Override
+    public String toString() {
+        return "ClassBean{" +
+                "name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", weekDay=" + weekDay +
+                ", startWeek=" + startWeek +
+                ", endWeek=" + endWeek +
+                ", startClass=" + startClass +
+                ", endClass=" + endClass +
+                ", isSingleOrDouble=" + isSingleOrDouble +
+                '}';
+    }
+
+
     public String name;
     public String address = "待定";
     public int weekDay;

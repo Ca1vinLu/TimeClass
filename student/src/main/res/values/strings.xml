@@ -41,5 +41,6 @@
     <string name="grade">年级</string>
     <string name="school_class">班级</string>
     <string name="name">姓名</string>
+    <string name="add_class">添加课程</string>
 
 </resources>

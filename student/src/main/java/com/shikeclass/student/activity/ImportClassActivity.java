@@ -329,6 +329,17 @@ public class ImportClassActivity extends BaseActivity {
                             bean.startWeek = Integer.parseInt(weeks[0]);
                             bean.endWeek = Integer.parseInt(weeks[1]);
                         }
+
+                        //当同一时间段有两门不同的课
+                        if (i1 != div.size() - 1) {
+                            ClassBean conflictClass = new ClassBean();
+                            conflictClass.weekDay = bean.weekDay;
+                            conflictClass.startClass = bean.startClass;
+                            conflictClass.endClass = bean.endClass;
+                            addConflictClass(conflictClass, div.subList(i1 + 1, div.size()));
+                        }
+                        break;
+
                     } else if (s.contains("3节")) {
                         bean.endClass++;
                         if (s.length() > 4)
@@ -343,6 +354,53 @@ public class ImportClassActivity extends BaseActivity {
                         bean.address = s;
                     }
                 }
+            }
+        }
+
+    }
+
+
+    private void addConflictClass(ClassBean bean, List<Element> div) {
+        classList.add(bean);
+        bean.name = div.get(0).text();
+        if (bean.name.startsWith("Δ"))
+            bean.name = bean.name.substring(1);
+        for (int i1 = 1; i1 < div.size(); i1++) {
+            String s = div.get(i1).text();
+            if (TextUtils.isEmpty(s))
+                continue;
+            else if (s.contains("单"))
+                bean.isSingleOrDouble = 1;
+            else if (s.contains("双"))
+                bean.isSingleOrDouble = 2;
+            else if (s.endsWith("周")) {
+                String temp = s.substring(0, s.length() - 1);
+                String[] weeks = temp.split("-");
+                if (weeks.length == 2) {
+                    bean.startWeek = Integer.parseInt(weeks[0]);
+                    bean.endWeek = Integer.parseInt(weeks[1]);
+                }
+
+                if (i1 != div.size() - 1) {
+                    ClassBean conflictClass = new ClassBean();
+                    conflictClass.weekDay = bean.weekDay;
+                    conflictClass.startClass = bean.startClass;
+                    conflictClass.endClass = bean.endClass;
+                    addConflictClass(bean, div.subList(i1 + 1, div.size()));
+                }
+
+            } else if (s.contains("3节")) {
+                bean.endClass++;
+                if (s.length() > 4)
+                    bean.address = s.substring(0, s.length() - 4);
+            } else if (s.contains("4节")) {
+                bean.endClass += 2;
+                if (s.length() > 4)
+                    bean.address = s.substring(0, s.length() - 4);
+            } else if (s.startsWith("(") && s.endsWith(")")) {
+                bean.name += s;
+            } else {
+                bean.address = s;
             }
         }
 

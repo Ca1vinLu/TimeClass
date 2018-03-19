@@ -48,7 +48,7 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
-    <style name="TextInputLayout">
+    <style name="TextInputLayout" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textColor">@color/red</item>
     </style>
 

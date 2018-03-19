@@ -4,8 +4,10 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
-import android.util.TypedValue;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -22,6 +24,7 @@ import com.shikeclass.student.utils.CommonValue;
 import com.shikeclass.student.utils.DataUtils;
 import com.shikeclass.student.utils.DialogUtils;
 import com.shikeclass.student.utils.SharedPreUtil;
+import com.shikeclass.student.view.CustomToolbar;
 import com.shikeclass.student.view.WeekTextView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -65,6 +68,8 @@ public class ClassTableActivity extends BaseActivity {
     WeekTextView friday;
     @BindView(R.id.saturday)
     WeekTextView saturday;
+    @BindView(R.id.toolbar)
+    CustomToolbar toolbar;
 
     private int classWith;
     private int todayClassWidth;
@@ -87,6 +92,7 @@ public class ClassTableActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        setSupportActionBar(toolbar);
         setWeek();
         setDate();
         classContent.post(new Runnable() {
@@ -105,6 +111,28 @@ public class ClassTableActivity extends BaseActivity {
     @Override
     public void initData() {
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_class_table, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        switch (itemId) {
+            case R.id.action_help:
+                DialogUtils.showDialog(mActivity, "帮助", "Hello");
+                break;
+            case android.R.id.home:
+                finish();
+                break;
+
+        }
+
+        return true;
     }
 
     private void setWeek() {
@@ -212,12 +240,17 @@ public class ClassTableActivity extends BaseActivity {
 
         int size = data.size();
         int colorSize = colorList.size();
+        ClassBean preClass = null, bean;
         for (int i = 0; i < size; i++) {
-            ClassBean bean = data.get(i);
-            if (shouldHaveClass(bean))
+            bean = data.get(i);
+            if (isConflictClass(preClass, bean))
+                continue;
+            else if (shouldHaveClass(bean))
                 bean.colorId = colorList.get(i % colorSize);
             else bean.colorId = ContextCompat.getColor(mActivity, R.color.grey_7a7a7a);
+
             addClassTextView(bean);
+            preClass = bean;
         }
     }
 
@@ -247,17 +280,17 @@ public class ClassTableActivity extends BaseActivity {
 
 
     private void addClassTextView(ClassBean bean) {
-        addClassTextView(bean.name, bean.address, bean.weekDay, bean.startClass, bean.endClass, bean.colorId);
+        addClassTextView(bean, bean.name, bean.address, bean.weekDay, bean.startClass, bean.endClass, bean.colorId);
     }
 
-    private void addClassTextView(String name, String address, int weekDay, int start, int end, int colorId) {
-        TextView textView = new TextView(mActivity);
+    private void addClassTextView(ClassBean bean, String name, String address, int weekDay, int start, int end, int colorId) {
+        AppCompatTextView textView = new AppCompatTextView(mActivity);
         textView.setText(name + "@" + address);
         textView.setTextColor(ContextCompat.getColor(mActivity, R.color.white));
         textView.setBackgroundColor(colorId);
         textView.setEllipsize(TextUtils.TruncateAt.END);
         textView.setPadding(dp2, dp6, dp2, dp6);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+        textView.setTextSize(12);
         RelativeLayout.LayoutParams layoutParams;
         int convertWeekDay = convertWeekDay(weekDay);
         if (currentWeekDay != convertWeekDay)
@@ -281,6 +314,14 @@ public class ClassTableActivity extends BaseActivity {
             layoutParams.setMargins(classWith * (convertWeekDay - 2) + todayClassWidth, marginTop, 0, 0);
 
         textView.setLayoutParams(layoutParams);
+        textView.setTag(bean);
+        textView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                DialogUtils.showDialog(mActivity, "课程信息", v.getTag().toString());
+                return true;
+            }
+        });
 
         classContent.addView(textView);
     }
@@ -300,5 +341,9 @@ public class ClassTableActivity extends BaseActivity {
 
         }
         return false;
+    }
+
+    private boolean isConflictClass(ClassBean class1, ClassBean class2) {
+        return class1 != null && class1.weekDay == class2.weekDay && class1.startClass == class2.startClass;
     }
 }

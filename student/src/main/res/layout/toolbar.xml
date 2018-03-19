@@ -12,9 +12,8 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="12dp"
         android:background="?selectableItemBackgroundBorderless"
-        android:backgroundTint="@color/white"
         android:padding="4dp"
-        android:src="?android:homeAsUpIndicator"
+        android:src="?homeAsUpIndicator"
         android:tint="@color/white" />
 
     <TextView

@@ -23,7 +23,7 @@ buildscript {
         version_code = 1
         version_name = "1.0.0"
         // App dependencies
-        support_version = '27.0.2'
+        support_version = '27.1.0'
 //    leakcanary_version = '1.5.4'
 //    junit_version = '4.12'
 //    robolectric_version = '3.1.2'

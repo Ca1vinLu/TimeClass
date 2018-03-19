@@ -8,8 +8,11 @@ import android.widget.TextView;
 
 import com.shikeclass.student.R;
 import com.shikeclass.student.base.BaseActivity;
+import com.shikeclass.student.eventbus.LoginEvent;
 import com.shikeclass.student.utils.CommonValue;
 import com.shikeclass.student.utils.SharedPreUtil;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 
@@ -64,6 +67,7 @@ public class LoginActivity extends BaseActivity {
                     SharedPreUtil.putStringValue(mActivity, CommonValue.SHA_STU_NAME, stuName);
                     SharedPreUtil.putStringValue(mActivity, CommonValue.SHA_STU_ID, stuId);
                     showToast("验证成功");
+                    EventBus.getDefault().post(new LoginEvent());
                     finish();
                 }
             }

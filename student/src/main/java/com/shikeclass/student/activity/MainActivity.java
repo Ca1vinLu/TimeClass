@@ -28,6 +28,7 @@ import com.shikeclass.student.R;
 import com.shikeclass.student.adapter.ClassAdapter;
 import com.shikeclass.student.base.BaseActivity;
 import com.shikeclass.student.bean.ClassBean;
+import com.shikeclass.student.eventbus.LoginEvent;
 import com.shikeclass.student.eventbus.UpdateTableEvent;
 import com.shikeclass.student.utils.CommonValue;
 import com.shikeclass.student.utils.DataUtils;
@@ -83,7 +84,6 @@ public class MainActivity extends BaseActivity
     public void initView() {
         setSwipeBackEnable(false);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         View headerView = navigationView.getHeaderView(0);
         headImage = headerView.findViewById(R.id.head_image);
@@ -99,6 +99,57 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void initData() {
+        getUserInfo();
+        getClassData();
+    }
+
+    @Override
+    public void initListener() {
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getHeaderView(0).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(LoginActivity.class);
+            }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initData();
+            }
+        });
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.POSTING)
+    public void onUpdateTable(UpdateTableEvent event) {
+        getClassData();
+    }
+
+    @Subscribe(threadMode = ThreadMode.POSTING)
+    public void onLogin(LoginEvent event) {
+        getUserInfo();
+    }
+
+    private void getUserInfo() {
         String stuName, stuId;
         stuName = SharedPreUtil.getStringValue(mActivity, CommonValue.SHA_STU_NAME, "");
         stuId = SharedPreUtil.getStringValue(mActivity, CommonValue.SHA_STU_ID, "");
@@ -110,7 +161,9 @@ public class MainActivity extends BaseActivity
             studentId.setVisibility(View.VISIBLE);
         }
 
+    }
 
+    private void getClassData() {
         swipeRefreshLayout.setRefreshing(true);
         List<ClassBean> data = DataUtils.getClassTableData(mActivity);
 
@@ -162,47 +215,6 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void initListener() {
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        navigationView.setNavigationItemSelectedListener(this);
-        navigationView.getHeaderView(0).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(LoginActivity.class);
-            }
-        });
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                initData();
-            }
-        });
-    }
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.POSTING)
-    public void onEventMainThread(UpdateTableEvent event) {
-        initData();
-    }
-
-    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -250,7 +262,7 @@ public class MainActivity extends BaseActivity
         } else if (id == R.id.my_file) {
             startActivity(FileActivity.class);
         } else if (id == R.id.my_sign_in) {
-
+            startActivity(SignInListActivity.class);
         } else if (id == R.id.my_rank) {
 
         } else if (id == R.id.import_class) {

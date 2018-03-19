@@ -3,6 +3,7 @@ package com.shikeclass.student.base;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -30,6 +31,12 @@ public abstract class BaseActivity extends SwipeBackActivity {
         mActivity = this;
         ButterKnife.bind(this);
         initView();
+
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setDisplayShowTitleEnabled(false);
+        }
+
         initData();
         initListener();
     }
