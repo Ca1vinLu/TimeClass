@@ -1,1 +1,1 @@
-include ':student', ':teacher'
+include ':app'
