@@ -77,8 +77,12 @@ public class AdjustTermActivity extends BaseActivity {
         btnAdjust.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (TextUtils.isEmpty(termWeek.getText().toString())) {
-                    showToast("周数不能为空");
+                termWeekLayout.setErrorEnabled(false);
+                if (TextUtils.isEmpty(termWeek.getText().toString().trim())) {
+                    showError(termWeekLayout, "请输入周数");
+                    return;
+                } else if (Integer.valueOf(termWeek.getText().toString().trim()) <= 0) {
+                    showError(termWeekLayout, "周数最小为1");
                     return;
                 }
                 SharedPreUtil.putStringValue(mActivity, CommonValue.SHA_TERM_START_TIME, termTime.getText().toString());
@@ -92,5 +96,10 @@ public class AdjustTermActivity extends BaseActivity {
                 });
             }
         });
+    }
+
+    private void showError(TextInputLayout textInputLayout, String error) {
+        textInputLayout.setError(error);
+        textInputLayout.getEditText().requestFocus();
     }
 }
