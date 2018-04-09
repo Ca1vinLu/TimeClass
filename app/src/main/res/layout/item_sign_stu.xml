@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="16dp">
+
+    <ImageView
+        android:id="@+id/head_image"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/icon_head_img" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="24dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/lesson_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            tools:text="编译原理" />
+
+        <TextView
+            android:id="@+id/student_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/grey_7a7a7a"
+            android:textSize="14sp"
+            tools:text="1525121025" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/sign_state"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:background="@color/green_22ac38"
+        android:gravity="center"
+        android:text="正\n常"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="normal" />
+
+</LinearLayout>

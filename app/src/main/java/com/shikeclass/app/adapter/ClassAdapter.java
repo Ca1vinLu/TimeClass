@@ -7,7 +7,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.shikeclass.app.R;
 import com.shikeclass.app.activity.ClassTableActivity;
-import com.shikeclass.app.activity.FileActivity;
+import com.shikeclass.app.activity.FolderActivity;
 import com.shikeclass.app.bean.ClassBean;
 
 /**
@@ -34,7 +34,7 @@ public class ClassAdapter extends BaseQuickAdapter<ClassBean, BaseViewHolder> {
                 Intent intent;
                 switch (view.getId()) {
                     case R.id.btn_file:
-                        intent = new Intent(mContext, FileActivity.class);
+                        intent = new Intent(mContext, FolderActivity.class);
                         mContext.startActivity(intent);
                         break;
                 }

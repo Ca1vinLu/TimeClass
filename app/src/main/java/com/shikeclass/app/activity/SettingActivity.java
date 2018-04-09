@@ -6,8 +6,11 @@ import android.widget.TextView;
 
 import com.shikeclass.app.R;
 import com.shikeclass.app.base.BaseActivity;
+import com.shikeclass.app.eventbus.SignOutEvent;
 import com.shikeclass.app.utils.CommonValue;
 import com.shikeclass.app.utils.SharedPreUtil;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 
@@ -20,6 +23,8 @@ public class SettingActivity extends BaseActivity {
     LinearLayout btnAdjustTerm;
     @BindView(R.id.btn_about)
     LinearLayout btnAbout;
+    @BindView(R.id.btn_sign_out)
+    LinearLayout btnSignOut;
 
     @Override
     public int getLayoutId() {
@@ -51,6 +56,15 @@ public class SettingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
+            }
+        });
+
+        btnSignOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreUtil.putBooleanValue(mActivity, CommonValue.SHA_IS_LOGIN, false);
+                EventBus.getDefault().post(new SignOutEvent());
+                finish();
             }
         });
     }

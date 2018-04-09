@@ -16,10 +16,10 @@
             android:id="@+id/my_sign_in"
             android:icon="@drawable/icon_sign_in"
             android:title="@string/my_sign_in" />
-        <item
-            android:id="@+id/my_rank"
-            android:icon="@drawable/icon_rank"
-            android:title="@string/my_rank" />
+        <!--<item-->
+            <!--android:id="@+id/my_rank"-->
+            <!--android:icon="@drawable/icon_rank"-->
+            <!--android:title="@string/my_rank" />-->
         <item
             android:id="@+id/import_class"
             android:icon="@drawable/icon_import"

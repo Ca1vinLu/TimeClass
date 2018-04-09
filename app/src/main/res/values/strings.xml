@@ -14,7 +14,11 @@
     <string name="my_file">我的文件</string>
     <string name="my_sign_in">我的签到</string>
     <string name="my_rank">签到排行榜</string>
-    <string name="start_sign_in">立即\n签到</string>
+    <string name="start_sign_in">开始\n签到</string>
+    <string name="imme_sign_in">立即\n签到</string>
+    <string name="is_having_lesson">正在\n上课</string>
+    <string name="having_lesson_soon">即将\n上课</string>
+    <string name="class_is_over">已下课</string>
     <string name="see_sign_in_list">查看签到表</string>
 
     <string name="Sunday">周日</string>
@@ -42,6 +46,9 @@
     <string name="school_class">班级</string>
     <string name="name">姓名</string>
     <string name="add_class">添加课程</string>
+
+    <string name="main_help">"1.签到功能会检测您当前的位置，请开启定位权限\n2.您在程序暂时挂起和锁屏时不会被检测为课堂暂离状态   \n3.当您尝试切换应用、点击home键进入主菜单、尝试杀死应用时，都会触发暂离状态检测，请不要在课堂尝试\n4.当您不小心触发暂离状态，我们会给予三分钟的时限让您返回 。用\n5.时课团队祝您学习进步！"</string>
+    <string name="sign_in_list">签到表</string>
 
 
 </resources>

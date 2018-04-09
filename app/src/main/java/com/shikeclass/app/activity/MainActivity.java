@@ -16,7 +16,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,23 +23,28 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.constant.TimeConstants;
 import com.blankj.utilcode.util.TimeUtils;
+import com.google.gson.reflect.TypeToken;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Response;
+import com.lzy.okgo.request.PostRequest;
 import com.shikeclass.app.R;
-import com.shikeclass.app.adapter.ClassAdapter;
+import com.shikeclass.app.adapter.ServerClassAdapter;
 import com.shikeclass.app.base.BaseActivity;
 import com.shikeclass.app.bean.ClassBean;
+import com.shikeclass.app.bean.ServerClassBean;
 import com.shikeclass.app.eventbus.LoginEvent;
-import com.shikeclass.app.eventbus.UpdateTableEvent;
+import com.shikeclass.app.eventbus.SignOutEvent;
+import com.shikeclass.app.network.JsonCallback;
 import com.shikeclass.app.utils.CommonValue;
-import com.shikeclass.app.utils.DataUtils;
 import com.shikeclass.app.utils.DialogUtils;
 import com.shikeclass.app.utils.SharedPreUtil;
+import com.shikeclass.app.utils.UrlUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -68,7 +72,7 @@ public class MainActivity extends BaseActivity
     TextView studentId;
     TextView login;
 
-    private ClassAdapter adapter;
+    private ServerClassAdapter adapter;
     private int currentWeek = 1;
     private int currentWeekDay = 1;
     private String startDay;
@@ -91,16 +95,23 @@ public class MainActivity extends BaseActivity
         studentId = headerView.findViewById(R.id.student_id);
         login = headerView.findViewById(R.id.login);
 
-        adapter = new ClassAdapter();
+        adapter = new ServerClassAdapter(SharedPreUtil.getIntValue(mActivity, CommonValue.SHA_LOGIN_TYPE, 0));
         adapter.bindToRecyclerView(recyclerView);
 
         swipeRefreshLayout.setColorSchemeResources(R.color.class_color1, R.color.class_color2, R.color.class_color3, R.color.class_color4);
+
+        if (SharedPreUtil.getIntValue(mActivity, CommonValue.SHA_LOGIN_TYPE, 0) == 0)
+            navigationView.inflateMenu(R.menu.activity_main_drawer_stu);
+        else
+            navigationView.inflateMenu(R.menu.activity_main_drawer_teacher);
     }
 
     @Override
     public void initData() {
+        initTime();
         getUserInfo();
-        getClassData();
+        if (SharedPreUtil.getBooleanValue(mActivity, CommonValue.SHA_IS_LOGIN, false))
+            getServerData();
     }
 
     @Override
@@ -121,7 +132,7 @@ public class MainActivity extends BaseActivity
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                initData();
+                getServerData();
             }
         });
     }
@@ -139,46 +150,126 @@ public class MainActivity extends BaseActivity
         EventBus.getDefault().unregister(this);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onUpdateTable(UpdateTableEvent event) {
-        getClassData();
-    }
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onUpdateTable(UpdateTableEvent event) {
+//        getClassData();
+//    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onLogin(LoginEvent event) {
+
+        navigationView.getMenu().clear();
+        if (SharedPreUtil.getIntValue(mActivity, CommonValue.SHA_LOGIN_TYPE, 0) == 0)
+            navigationView.inflateMenu(R.menu.activity_main_drawer_stu);
+        else
+            navigationView.inflateMenu(R.menu.activity_main_drawer_teacher);
+
         getUserInfo();
+        adapter.setUserType(event.getType());
+        getServerData(event.getData());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLogout(SignOutEvent event) {
+
+        login.setVisibility(View.VISIBLE);
+        studentName.setVisibility(View.GONE);
+        studentId.setVisibility(View.GONE);
+
+        adapter.setNewData(null);
     }
 
     private void getUserInfo() {
-        String stuName, stuId;
-        stuName = SharedPreUtil.getStringValue(mActivity, CommonValue.SHA_STU_NAME, "");
-        stuId = SharedPreUtil.getStringValue(mActivity, CommonValue.SHA_STU_ID, "");
-        if (!TextUtils.isEmpty(stuName) && !TextUtils.isEmpty(stuId)) {
-            studentId.setText(stuId);
-            studentName.setText(stuName);
-            login.setVisibility(View.GONE);
-            studentName.setVisibility(View.VISIBLE);
-            studentId.setVisibility(View.VISIBLE);
+
+        if (SharedPreUtil.getBooleanValue(mActivity, CommonValue.SHA_IS_LOGIN, false)) {
+            if (SharedPreUtil.getIntValue(mActivity, CommonValue.SHA_LOGIN_TYPE, 0) == 0) {
+                String stuName, stuId;
+                stuName = SharedPreUtil.getStringValue(mActivity, CommonValue.SHA_STU_NAME, "");
+                stuId = SharedPreUtil.getStringValue(mActivity, CommonValue.SHA_STU_ID, "");
+                studentId.setText(stuId);
+                studentName.setText(stuName);
+                login.setVisibility(View.GONE);
+                studentName.setVisibility(View.VISIBLE);
+                studentId.setVisibility(View.VISIBLE);
+            } else {
+                String stuName;
+                stuName = SharedPreUtil.getStringValue(mActivity, CommonValue.SHA_STU_NAME, "");
+                studentName.setText(stuName);
+                login.setVisibility(View.GONE);
+                studentName.setVisibility(View.VISIBLE);
+                studentId.setVisibility(View.INVISIBLE);
+            }
+        } else {
+            login.setVisibility(View.VISIBLE);
+            studentName.setVisibility(View.GONE);
+            studentId.setVisibility(View.GONE);
         }
+
 
     }
 
-    private void getClassData() {
+    private void getServerData() {
         swipeRefreshLayout.setRefreshing(true);
-        List<ClassBean> data = DataUtils.getClassTableData(mActivity);
+        PostRequest<List<ServerClassBean>> request;
+        if (SharedPreUtil.getIntValue(mActivity, CommonValue.SHA_LOGIN_TYPE, 0) == 0)
+            request = OkGo.<List<ServerClassBean>>post(UrlUtils.getStuTodayLesson)
+                    .tag(this)
+                    .params("student_id", SharedPreUtil.getStringValue(mActivity, CommonValue.SHA_STU_ID, ""));
+        else request = OkGo.<List<ServerClassBean>>post(UrlUtils.getTeacherLesson)
+                .tag(this)
+                .params("teacher_name", SharedPreUtil.getStringValue(mActivity, CommonValue.SHA_TEACHER_NAME, ""));
 
-        if (data == null) {
-            DialogUtils.showDialog(mActivity, "提示", "请先导入课程，导入前请确保手机已连接至HQU", "导入", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    startActivity(ImportClassActivity.class);
-                }
-            });
-            swipeRefreshLayout.setRefreshing(false);
-            adapter.setEmptyView(R.layout.item_no_import_class);
-            return;
-        }
+        request.execute(new JsonCallback<List<ServerClassBean>>(new TypeToken<List<ServerClassBean>>() {
+        }.getType()) {
+            @Override
+            public void onSuccess(Response<List<ServerClassBean>> response) {
+                getServerData(response.body());
+                swipeRefreshLayout.setRefreshing(false);
+            }
 
+            @Override
+            public void onError(Response<List<ServerClassBean>> response) {
+                super.onError(response);
+                swipeRefreshLayout.setRefreshing(false);
+
+            }
+        });
+    }
+
+
+    private void getServerData(List<ServerClassBean> serverData) {
+        adapter.setNewData(serverData);
+    }
+
+
+//    private void getClassData() {
+//        swipeRefreshLayout.setRefreshing(true);
+//        List<ClassBean> data = DataUtils.getClassTableData(mActivity);
+//
+//        if (data == null) {
+//            DialogUtils.showDialog(mActivity, "提示", "请先导入课程，导入前请确保手机已连接至HQU", "导入", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    startActivity(ImportClassActivity.class);
+//                }
+//            });
+//            swipeRefreshLayout.setRefreshing(false);
+//            adapter.setEmptyView(R.layout.item_no_import_class);
+//            return;
+//        }
+//
+//
+//        List<ClassBean> todayClass = new ArrayList<>();
+//        for (ClassBean datum : data) {
+//            if (shouldHaveClass(datum))
+//                todayClass.add(datum);
+//        }
+//        adapter.setNewData(todayClass);
+//
+//        swipeRefreshLayout.setRefreshing(false);
+//    }
+
+    private void initTime() {
         startDay = SharedPreUtil.getStringValue(mActivity, CommonValue.SHA_TERM_START_TIME, "2018-03-05");
         Date startDay = TimeUtils.string2Date(this.startDay, new SimpleDateFormat("yyyy-MM-dd"));
         int termWeeks = SharedPreUtil.getIntValue(mActivity, CommonValue.SHA_TERM_WEEKS, 20);
@@ -204,14 +295,6 @@ public class MainActivity extends BaseActivity
             currentWeekDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
             currentWeek = (int) (spanDays / 7 + 1);
         }
-        List<ClassBean> todayClass = new ArrayList<>();
-        for (ClassBean datum : data) {
-            if (shouldHaveClass(datum))
-                todayClass.add(datum);
-        }
-        adapter.setNewData(todayClass);
-
-        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -246,6 +329,9 @@ public class MainActivity extends BaseActivity
         if (id == R.id.action_settings) {
             startActivity(SettingActivity.class);
             return true;
+        } else if (id == R.id.action_help) {
+            DialogUtils.showDialog(mActivity, getString(R.string.main_help));
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -257,18 +343,25 @@ public class MainActivity extends BaseActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        Intent intent;
         if (id == R.id.my_class) {
             startActivity(ClassTableActivity.class);
         } else if (id == R.id.my_file) {
-            startActivity(FileActivity.class);
+            startActivity(FolderActivity.class);
         } else if (id == R.id.my_sign_in) {
-            startActivity(SignInListActivity.class);
-        } else if (id == R.id.my_rank) {
-
+            intent = new Intent(mActivity, SignInListActivity.class);
+            intent.putExtra("week", currentWeek);
+            startActivity(intent);
         } else if (id == R.id.import_class) {
             startActivity(ImportClassActivity.class);
         } else if (id == R.id.setting)
             startActivity(SettingActivity.class);
+        else if (id == R.id.sign_in_list) {
+            intent = new Intent(mActivity, SignInListActivity.class);
+            intent.putExtra("week", currentWeek);
+            intent.putExtra("teacher", true);
+            startActivity(intent);
+        }
 
 //        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 //        drawer.closeDrawer(GravityCompat.START);

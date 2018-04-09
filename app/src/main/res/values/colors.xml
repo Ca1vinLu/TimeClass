@@ -37,4 +37,7 @@
     <color name="class_color5">#fe8d3f</color>
     <color name="class_color6">#d33a32</color>
     <color name="class_color7">#00b3ed</color>
+
+    <color name="yellow_ffcc00">#ffcc00</color>
+    <color name="green_22ac38">#22ac38</color>
 </resources>

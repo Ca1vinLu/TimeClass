@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.TextInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/til_code"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="签到码"
+    android:paddingBottom="24dp"
+    android:paddingEnd="24dp"
+    android:paddingStart="24dp"
+    android:paddingTop="24dp">
+
+    <android.support.design.widget.TextInputEditText
+        android:id="@+id/et_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</android.support.design.widget.TextInputLayout>
