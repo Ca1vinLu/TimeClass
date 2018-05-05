@@ -21,11 +21,11 @@ public class JsonArrayConvert implements Converter<JSONArray> {
                 code1 = -1;
             }
             if (code1 != 200)
-                throw new IllegalStateException(String.valueOf(code1), new Throwable(jsonObject.optString("msg")));
+                throw new IllegalStateException(String.valueOf(code1), new Throwable(jsonObject.optString("data")));
 
             LogUtils.d("json", jsonObject.toString());
-            if (!jsonObject.optString("result").equals(""))
-                return new JSONArray(jsonObject.optString("result"));
+            if (!jsonObject.optString("data").equals(""))
+                return new JSONArray(jsonObject.optString("data"));
             else return new JSONArray();
         } else return null;
     }

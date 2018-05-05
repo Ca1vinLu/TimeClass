@@ -40,12 +40,12 @@ public abstract class JSONObjectCallback extends AbsCallback<JSONObject> {
             }
             if (code1 != 200) {
                 response.close();
-                throw new IllegalStateException(String.valueOf(code1), new Throwable(jsonObject.optString("msg")));
+                throw new IllegalStateException(String.valueOf(code1), new Throwable(jsonObject.optString("data")));
             }
             response.close();
             LogUtils.d("json", jsonObject.toString());
-            if (!jsonObject.optString("result").equals(""))
-                return new JSONObject(jsonObject.optString("result"));
+            if (!jsonObject.optString("data").equals(""))
+                return new JSONObject(jsonObject.optString("data"));
             else return new JSONObject();
         }
     }

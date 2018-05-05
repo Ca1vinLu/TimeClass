@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingBottom="16dp"
     android:paddingEnd="16dp"
     android:paddingStart="12dp"
-    android:background="?selectableItemBackground"
     android:paddingTop="16dp">
 
 
@@ -28,23 +29,22 @@
             android:id="@+id/folder_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="高等数学A（一）"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            tools:text="高等数学A（一）" />
 
         <TextView
-            android:id="@+id/folder_num"
+            android:id="@+id/file_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="共9个文件"
             android:textColor="@color/grey_7a7a7a"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            tools:text="共9个文件" />
 
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/detail_btn"
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:padding="6dp"

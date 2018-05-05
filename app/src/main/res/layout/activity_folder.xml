@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activity.FileDetailActivity">
+    tools:context=".activity.FolderActivity">
 
     <com.shikeclass.app.view.MyToolbar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="高等数学A（一）" />
+        app:title="我的文件" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"

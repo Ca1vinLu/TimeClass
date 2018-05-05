@@ -162,7 +162,7 @@ public class ImportClassActivity extends BaseActivity {
         final ProgressDialog progressDialog = new ProgressDialog(mActivity);
         progressDialog.setMessage("正在获取班级列表");
         progressDialog.show();
-        OkGo.<String>get(UrlUtils.SpecialityClass)
+        OkGo.<String>get(UrlUtils.specialityClass)
                 .tag(mActivity)
                 .params("XYDM", faculty[spinnerFaculty.getSelectedIndex()][0])
                 .params("ZYNJ", grade[spinnerGrade.getSelectedIndex()])
@@ -206,7 +206,7 @@ public class ImportClassActivity extends BaseActivity {
         final ProgressDialog progressDialog = new ProgressDialog(mActivity);
         progressDialog.setMessage("正在导入课程表");
         progressDialog.show();
-        OkGo.<String>get(UrlUtils.ClassArrange)
+        OkGo.<String>get(UrlUtils.classArrange)
                 .tag(mActivity)
                 .params("KKXN", academicYear[spinnerAcademicYear.getSelectedIndex()])
                 .params("KKXQ", term[spinnerTerm.getSelectedIndex()])

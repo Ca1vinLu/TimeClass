@@ -35,9 +35,9 @@
         <activity
             android:name=".activity.ClassTableActivity"
             android:exported="true" />
-        <activity android:name=".activity.FileDetailActivity" />
+        <activity android:name=".activity.FileActivity" />
         <activity
-            android:name=".activity.FileActivity"
+            android:name=".activity.FolderActivity"
             android:exported="true" />
         <activity android:name=".activity.LoginActivity" />
         <activity android:name=".activity.SignInListActivity" />

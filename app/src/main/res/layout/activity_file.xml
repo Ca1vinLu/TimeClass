@@ -8,9 +8,9 @@
     tools:context=".activity.FileActivity">
 
     <com.shikeclass.app.view.MyToolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:title="我的文件" />
+        android:layout_height="wrap_content" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"

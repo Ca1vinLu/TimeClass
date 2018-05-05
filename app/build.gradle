@@ -84,7 +84,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
 
     //View相关
-    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.35'
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.36'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 //    implementation 'cn.zhouchaoyuan:excelpanel:1.0.3'
     implementation 'me.imid.swipebacklayout.lib:library:1.1.0'
@@ -97,7 +97,7 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.1.1'
 
     //其他
-    implementation 'com.blankj:utilcode:1.12.6'
+    implementation 'com.blankj:utilcode:1.13.5'
     implementation 'com.yanzhenjie:permission:1.1.2'
     implementation "org.jsoup:jsoup:1.11.2"
 }

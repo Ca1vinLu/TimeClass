@@ -28,7 +28,7 @@
         tools:targetApi="n_mr1">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetClass="com.shikeclass.app.activity.FileActivity"
+            android:targetClass="com.shikeclass.app.activity.FolderActivity"
             android:targetPackage="com.shikeclass.app" />
         <categories android:name="android.shortcut.conversation" />
 
