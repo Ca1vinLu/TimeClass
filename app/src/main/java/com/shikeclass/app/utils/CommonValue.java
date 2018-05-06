@@ -15,4 +15,6 @@ public interface CommonValue {
     String SHA_IS_LOGIN = "IS_LOGIN";
     String SHA_SERVER_CLASS_TABLE = "SERVER_CLASS_TABLE";
     String SHA_TEACHER_NAME = "TEACHER_NAME";
+    String SHA_HAVING_CLASS = "HAVING_CLASS";
+    String SHA_LESSON_ID = "LESSON_ID";
 }

@@ -41,8 +41,6 @@ public class ServerClassAdapter extends BaseQuickAdapter<ServerClassBean, BaseVi
     private String[] startTime = {"8:00", "9:00", "10:10", "11:10", "", "", "14:30", "15:30", "16:30", "17:30", "19:10", "20:10", "21:10"};
     private String[] endTime = {"8:50", "9:50", "11:00", "12:00", "", "", "15:20", "16:20", "17:20", "18:20", "20:00", "21:00", "22:00"};
 
-    private Date date = new Date();
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("hh:MM");
 
     public ServerClassAdapter(int type) {
         super(R.layout.item_class);
@@ -99,17 +97,13 @@ public class ServerClassAdapter extends BaseQuickAdapter<ServerClassBean, BaseVi
 
         if (userType == 0) {
             helper.setText(R.id.class_file, item.lesson_name + " 课件");
-            date.setTime(System.currentTimeMillis());
-            String timeStr = dateFormat.format(date);
-            if (timeStr.compareTo(beforeStartTime[Integer.valueOf(item.lesson_id.substring(1, 2)) - 1]) < 0) {
+            if (item.status==0) {
                 helper.setText(R.id.btn_sign, mContext.getString(R.string.imme_sign_in));
                 helper.setBackgroundColor(R.id.btn_sign, ContextCompat.getColor(mContext, R.color.colorPrimary));
-                item.status = 0;
-            } else if (timeStr.compareTo(beforeStartTime[Integer.valueOf(item.lesson_id.substring(1, 2)) - 1]) >= 0 && timeStr.compareTo(startTime[Integer.valueOf(item.lesson_id.substring(1, 2)) - 1]) <= 0) {
+            } else if (item.status==1) {
                 helper.setText(R.id.btn_sign, mContext.getString(R.string.having_lesson_soon));
                 helper.setBackgroundColor(R.id.btn_sign, ContextCompat.getColor(mContext, R.color.yellow_ffcc00));
-                item.status = 1;
-            } else if (timeStr.compareTo(startTime[Integer.valueOf(item.lesson_id.substring(1, 2)) - 1]) >= 0 && timeStr.compareTo(endTime[Integer.valueOf(item.lesson_id.substring(2, 3)) - 1]) <= 0) {
+            } else if (item.status==2) {
                 if (item.getExist().equals("0")) {
                     helper.setText(R.id.btn_sign, mContext.getString(R.string.imme_sign_in));
                     helper.setBackgroundColor(R.id.btn_sign, ContextCompat.getColor(mContext, R.color.colorPrimary));
@@ -117,11 +111,9 @@ public class ServerClassAdapter extends BaseQuickAdapter<ServerClassBean, BaseVi
                     helper.setText(R.id.btn_sign, mContext.getString(R.string.is_having_lesson));
                     helper.setBackgroundColor(R.id.btn_sign, ContextCompat.getColor(mContext, R.color.colorPrimary));
                 }
-                item.status = 2;
-            } else {
+            } else if (item.status==3){
                 helper.setText(R.id.btn_sign, mContext.getString(R.string.class_is_over));
                 helper.setBackgroundColor(R.id.btn_sign, ContextCompat.getColor(mContext, R.color.grey_7a7a7a));
-                item.status = 3;
             }
 
         } else {

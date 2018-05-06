@@ -7,6 +7,7 @@ import android.content.pm.ShortcutManager;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -56,6 +57,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final int DELAY_TIME = 60000;
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.nav_view)
@@ -67,17 +70,30 @@ public class MainActivity extends BaseActivity
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
 
-    CircleImageView headImage;
-    TextView studentName;
-    TextView studentId;
-    TextView login;
+    private CircleImageView headImage;
+    private TextView studentName;
+    private TextView studentId;
+    private TextView login;
 
     private ServerClassAdapter adapter;
+    private List<ServerClassBean> mServerData;
     private int currentWeek = 1;
     private int currentWeekDay = 1;
     private String startDay;
     private boolean isDuringTerm = true;
     private long clickBackTime;
+
+
+    private String[] weeks = {"", "周一", "周二", "周三", "周四", "周五", "周六", "周日"};
+    private String[] beforeStartTime = {"7:50", "8:50", "10:00", "11:00", "", "", "14:20", "15:20", "16:20", "17:20", "19:00", "20:00", "21:00"};
+    private String[] startTime = {"8:00", "9:00", "10:10", "11:10", "", "", "14:30", "15:30", "16:30", "17:30", "19:10", "20:10", "21:10"};
+    private String[] endTime = {"8:50", "9:50", "11:00", "12:00", "", "", "15:20", "16:20", "17:20", "18:20", "20:00", "21:00", "22:00"};
+
+    private Date date = new Date();
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("hh:MM");
+
+    private Handler mHandler = new Handler();
+
 
     @Override
     public int getLayoutId() {
@@ -238,7 +254,51 @@ public class MainActivity extends BaseActivity
 
 
     private void getServerData(List<ServerClassBean> serverData) {
-        adapter.setNewData(serverData);
+        mServerData = serverData;
+        setServerDataState(mServerData);
+        adapter.setNewData(mServerData);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setServerDataState(mServerData);
+            }
+        }, DELAY_TIME);
+
+    }
+
+    private void setServerDataState(List<ServerClassBean> serverData) {
+        if (serverData == null)
+            return;
+
+        boolean haveClass = false;
+        String lessonId = "";
+        for (ServerClassBean item : serverData) {
+            date.setTime(System.currentTimeMillis());
+            String timeStr = dateFormat.format(date);
+            if (timeStr.compareTo(beforeStartTime[Integer.valueOf(item.lesson_id.substring(1, 2)) - 1]) < 0) {
+                item.status = 0;
+            } else if (timeStr.compareTo(beforeStartTime[Integer.valueOf(item.lesson_id.substring(1, 2)) - 1]) >= 0 && timeStr.compareTo(startTime[Integer.valueOf(item.lesson_id.substring(1, 2)) - 1]) <= 0) {
+                item.status = 1;
+            } else if (timeStr.compareTo(startTime[Integer.valueOf(item.lesson_id.substring(1, 2)) - 1]) >= 0 && timeStr.compareTo(endTime[Integer.valueOf(item.lesson_id.substring(2, 3)) - 1]) <= 0) {
+                item.status = 2;
+                haveClass = true;
+                lessonId = item.lesson_id;
+            } else {
+                item.status = 3;
+            }
+        }
+
+        SharedPreUtil.putBooleanValue(mActivity, CommonValue.SHA_HAVING_CLASS, haveClass);
+        if (haveClass) {
+            SharedPreUtil.putStringValue(mActivity, CommonValue.SHA_LESSON_ID, lessonId);
+        }
+
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setServerDataState(mServerData);
+            }
+        }, DELAY_TIME);
     }
 
 
