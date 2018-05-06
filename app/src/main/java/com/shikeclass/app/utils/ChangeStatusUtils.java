@@ -15,7 +15,9 @@ import org.json.JSONObject;
 public class ChangeStatusUtils {
 
     public static void changeStatus(Context context, String lessonId, int status) {
-        Toast.makeText(context, "您已进入暂离状态", Toast.LENGTH_SHORT).show();
+        if (status == 2) {
+            Toast.makeText(context, "您已进入暂离状态", Toast.LENGTH_SHORT).show();
+        }
         OkGo.<JSONObject>post(UrlUtils.changeStatus)
                 .tag(context)
                 .params("student_id", SharedPreUtil.getStringValue(context, CommonValue.SHA_STU_ID, ""))

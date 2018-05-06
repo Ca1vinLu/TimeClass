@@ -16,7 +16,7 @@ public class ServerClassBean {
     public String student_id;
     public String student_name;
     public Object code_time;
-    public String exist;
+    public String   exist;
 
     //0-还未到上课时间  1-即将上课  2-正在上课  3-已下课
     public int status = 0;

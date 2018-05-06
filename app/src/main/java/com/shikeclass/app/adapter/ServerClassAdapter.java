@@ -24,9 +24,6 @@ import com.shikeclass.app.utils.UrlUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
  * Created by LYZ on 2018/3/27 0027.
  */
@@ -59,7 +56,7 @@ public class ServerClassAdapter extends BaseQuickAdapter<ServerClassBean, BaseVi
                             break;
                         case R.id.btn_sign:
                             final ServerClassBean bean = mData.get(position);
-                            if ((bean.status == 1 || bean.status == 2) && bean.exist.equals("0")) {
+                            if ((bean.status == 1 || bean.status == 2) && bean.getExist().equals("0")) {
                                 InputCodeDialog dialog = InputCodeDialog.newInstance(new InputCodeDialog.CodeCallback() {
                                     @Override
                                     public void onCommit(String code) {
@@ -97,13 +94,13 @@ public class ServerClassAdapter extends BaseQuickAdapter<ServerClassBean, BaseVi
 
         if (userType == 0) {
             helper.setText(R.id.class_file, item.lesson_name + " 课件");
-            if (item.status==0) {
+            if (item.status == 0) {
                 helper.setText(R.id.btn_sign, mContext.getString(R.string.imme_sign_in));
                 helper.setBackgroundColor(R.id.btn_sign, ContextCompat.getColor(mContext, R.color.colorPrimary));
-            } else if (item.status==1) {
+            } else if (item.status == 1) {
                 helper.setText(R.id.btn_sign, mContext.getString(R.string.having_lesson_soon));
                 helper.setBackgroundColor(R.id.btn_sign, ContextCompat.getColor(mContext, R.color.yellow_ffcc00));
-            } else if (item.status==2) {
+            } else if (item.status == 2) {
                 if (item.getExist().equals("0")) {
                     helper.setText(R.id.btn_sign, mContext.getString(R.string.imme_sign_in));
                     helper.setBackgroundColor(R.id.btn_sign, ContextCompat.getColor(mContext, R.color.colorPrimary));
@@ -111,7 +108,7 @@ public class ServerClassAdapter extends BaseQuickAdapter<ServerClassBean, BaseVi
                     helper.setText(R.id.btn_sign, mContext.getString(R.string.is_having_lesson));
                     helper.setBackgroundColor(R.id.btn_sign, ContextCompat.getColor(mContext, R.color.colorPrimary));
                 }
-            } else if (item.status==3){
+            } else if (item.status == 3) {
                 helper.setText(R.id.btn_sign, mContext.getString(R.string.class_is_over));
                 helper.setBackgroundColor(R.id.btn_sign, ContextCompat.getColor(mContext, R.color.grey_7a7a7a));
             }
@@ -125,7 +122,7 @@ public class ServerClassAdapter extends BaseQuickAdapter<ServerClassBean, BaseVi
         helper.addOnClickListener(R.id.btn_sign);
     }
 
-    private void sign(ServerClassBean item, String code, final int pos) {
+    private void sign(final ServerClassBean item, String code, final int pos) {
         OkGo.<String>post(UrlUtils.studentSign)
                 .tag(mContext)
                 .params("student_id", SharedPreUtil.getStringValue(mContext, CommonValue.SHA_STU_ID, ""))
@@ -140,6 +137,7 @@ public class ServerClassAdapter extends BaseQuickAdapter<ServerClassBean, BaseVi
                             int status = jsonObject.optInt("status");
                             if (status == 200) {
                                 DialogUtils.showDialog(mContext, "签到成功");
+                                item.exist = "1";
                                 notifyItemChanged(pos);
                             } else if (status == 100) {
                                 DialogUtils.showDialog(mContext, jsonObject.optString("data"));
