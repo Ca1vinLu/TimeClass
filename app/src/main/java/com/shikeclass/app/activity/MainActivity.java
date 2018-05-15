@@ -85,12 +85,12 @@ public class MainActivity extends BaseActivity
 
 
     private String[] weeks = {"", "周一", "周二", "周三", "周四", "周五", "周六", "周日"};
-    private String[] beforeStartTime = {"7:50", "8:50", "10:00", "11:00", "", "", "14:20", "15:20", "16:20", "17:20", "19:00", "20:00", "21:00"};
-    private String[] startTime = {"8:00", "9:00", "10:10", "11:10", "", "", "14:30", "15:30", "16:30", "17:30", "19:10", "20:10", "21:10"};
-    private String[] endTime = {"8:50", "9:50", "11:00", "12:00", "", "", "15:20", "16:20", "17:20", "18:20", "20:00", "21:00", "22:00"};
+    private String[] beforeStartTime = {"07:50", "08:50", "10:00", "11:00", "", "", "14:20", "15:20", "16:20", "17:20", "19:00", "20:00", "21:00"};
+    private String[] startTime = {"08:00", "09:00", "10:10", "11:10", "", "", "14:30", "15:30", "16:30", "17:30", "19:10", "20:10", "21:10"};
+    private String[] endTime = {"08:50", "09:50", "11:00", "12:00", "", "", "15:20", "16:20", "17:20", "18:20", "20:00", "21:00", "22:00"};
 
     private Date date = new Date();
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("hh:MM");
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
 
     private Handler mHandler = new Handler();
 
